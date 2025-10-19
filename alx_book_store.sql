@@ -1,4 +1,4 @@
--- SQL DDL for alx_book_store
+-- SQL DDL for alx_book_store #talink stateof art
 -- NOTE: All SQL keywords are uppercase as requested.
 
 DROP DATABASE IF EXISTS `alx_book_store`;
