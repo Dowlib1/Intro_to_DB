@@ -1,5 +1,5 @@
 -- Date: 2025-10-26
--- Full description of the books table from the alx_book_store database
+-- Full description of the Books table from the alx_book_store database
 -- The database name is passed as an argument to the mysql command
 SELECT
   COLUMN_NAME AS Field,
@@ -9,6 +9,6 @@ SELECT
   COLUMN_DEFAULT AS `Default`,
   EXTRA AS Extra
 FROM INFORMATION_SCHEMA.COLUMNS
-WHERE TABLE_SCHEMA = DATABASE()
-  AND TABLE_NAME = 'books'
+WHERE TABLE_SCHEMA = 'alx_book_store'
+  AND TABLE_NAME = 'Books'
 ORDER BY ORDINAL_POSITION;
