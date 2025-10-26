@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Date: 2025-10-26 13:43:38 -0700
+# Date: 2025-10-26
 """
 Create the alx_book_store database on a MySQL server.
 
@@ -18,7 +18,6 @@ try:
 except ModuleNotFoundError:
     print("Required module 'mysql-connector-python' is not installed. Install with: pip install mysql-connector-python")
     sys.exit(1)
-
 
 def main():
     host = input("Enter MySQL host [localhost]: ").strip() or "localhost"
@@ -39,20 +38,11 @@ def main():
             print("Error: Unable to connect to the MySQL host.")
         else:
             print(f"Error connecting to MySQL or creating database: {err}")
-    except Exception as exc:
-        print(f"An unexpected error occurred: {exc}")
     finally:
         if cursor is not None:
-            try:
-                cursor.close()
-            except Exception:
-                pass
-        if conn is not None and getattr(conn, "is_connected", lambda: False)():
-            try:
-                conn.close()
-            except Exception:
-                pass
-
+            cursor.close()
+        if conn is not None and conn.is_connected():
+            conn.close()
 
 if __name__ == "__main__":
     main()

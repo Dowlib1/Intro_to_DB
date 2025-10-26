@@ -1,5 +1,4 @@
--- List all tables in the current database.
--- The database name will be passed as an argument to the mysql command:
--- Example: mysql -u user -p alx_book_store < task_3.sql
-USE alx_book_store.sql;
+-- Date: 2025-10-26
+-- List all tables in the alx_book_store database
+-- The database name is passed as an argument to the mysql command
 SHOW TABLES;
