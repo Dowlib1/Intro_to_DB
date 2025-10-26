@@ -1,16 +1,17 @@
--- MySQL schema for alx_book_store
-
-DROP DATABASE IF EXISTS alx_book_store;
-CREATE DATABASE alx_book_store;
+-- SQL schema for alx_book_store
+-- Creates database if it does not exist and creates required tables
+CREATE DATABASE IF NOT EXISTS alx_book_store
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci;
 USE alx_book_store;
 
-CREATE TABLE Authors (
+CREATE TABLE IF NOT EXISTS Authors (
   author_id INT NOT NULL AUTO_INCREMENT,
   author_name VARCHAR(215) NOT NULL,
   PRIMARY KEY (author_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE Books (
+CREATE TABLE IF NOT EXISTS Books (
   book_id INT NOT NULL AUTO_INCREMENT,
   title VARCHAR(130) NOT NULL,
   author_id INT NOT NULL,
@@ -21,7 +22,7 @@ CREATE TABLE Books (
   CONSTRAINT fk_books_author FOREIGN KEY (author_id) REFERENCES Authors(author_id) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE Customers (
+CREATE TABLE IF NOT EXISTS Customers (
   customer_id INT NOT NULL AUTO_INCREMENT,
   customer_name VARCHAR(215) NOT NULL,
   email VARCHAR(215),
@@ -29,7 +30,7 @@ CREATE TABLE Customers (
   PRIMARY KEY (customer_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE Orders (
+CREATE TABLE IF NOT EXISTS Orders (
   order_id INT NOT NULL AUTO_INCREMENT,
   customer_id INT NOT NULL,
   order_date DATE NOT NULL,
@@ -38,7 +39,7 @@ CREATE TABLE Orders (
   CONSTRAINT fk_orders_customer FOREIGN KEY (customer_id) REFERENCES Customers(customer_id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE Order_Details (
+CREATE TABLE IF NOT EXISTS Order_Details (
   orderdetailid INT NOT NULL AUTO_INCREMENT,
   order_id INT NOT NULL,
   book_id INT NOT NULL,

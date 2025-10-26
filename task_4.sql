@@ -1,6 +1,8 @@
--- Print a full description of the table `books` without using DESCRIBE/EXPLAIN.
--- The database name will be passed as an argument to the mysql command:
--- Example: mysql -u user -p alx_book_store < task_4.sql
+-- Full description of the 'books' table.
+-- The database name will be passed as an argument of the mysql command.
+-- This script retrieves column metadata from INFORMATION_SCHEMA to show a complete table description.
+
+USE alx_book_store;
 
 SELECT
   COLUMN_NAME AS 'Field',
@@ -13,4 +15,4 @@ SELECT
 FROM INFORMATION_SCHEMA.COLUMNS
 WHERE TABLE_SCHEMA = DATABASE()
   AND TABLE_NAME = 'books'
-ORDER BY ORDINAL_POSITION;
+ORDER BY ORDINAL_POSITION;;

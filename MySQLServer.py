@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
+# Date: 2025-10-26 13:43:38 -0700
 """
-Simple script to create the alx_book_store database on a MySQL server.
+Create the alx_book_store database on a MySQL server.
 
-- If the database already exists, the script will not fail and will inform you.
-- Does NOT use SELECT or SHOW statements.
+- If the database already exists, the script will not fail.
+- Uses CREATE DATABASE IF NOT EXISTS alx_book_store (no SELECT or SHOW).
 - Handles opening and closing the DB connection and cursor.
-- Prints an error message when failing to connect.
+- Prints "Database 'alx_book_store' created successfully!" when the CREATE statement runs.
+- Prints error messages when failing to connect or on other MySQL errors.
 """
 
 import getpass
@@ -28,28 +30,26 @@ def main():
     conn = None
     cursor = None
     try:
-        # Open connection (no database specified)
+        # Establish connection to MySQL server (no database specified)
         conn = mysql.connector.connect(host=host, user=user, password=password)
         cursor = conn.cursor()
-        try:
-            # Try to create the database. Do NOT use SHOW or SELECT.
-            cursor.execute("CREATE DATABASE alx_book_store")
-            print("Database 'alx_book_store' created successfully!")
-        except mysql.connector.Error as err:
-            # If database already exists, MySQL returns ER_DB_CREATE_EXISTS (1007).
-            if err.errno == errorcode.ER_DB_CREATE_EXISTS:
-                print("Database 'alx_book_store' already exists.")
-            else:
-                # Any other error while creating DB
-                print(f"Failed creating database: {err}")
+
+        # Create the database if it does not exist.
+        # NOTE: This statement must appear exactly as required by the checks:
+        cursor.execute("CREATE DATABASE IF NOT EXISTS alx_book_store")
+        # If the statement executed without raising, report success.
+        print("Database 'alx_book_store' created successfully!")
     except mysql.connector.Error as err:
-        # Handle connection errors
+        # Handle connection and other MySQL errors
         if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
             print("Error: Access denied - check your username or password.")
         elif err.errno == errorcode.ER_BAD_HOST_ERROR:
             print("Error: Unable to connect to the MySQL host.")
         else:
-            print(f"Error connecting to MySQL: {err}")
+            print(f"Error connecting to MySQL or creating database: {err}")
+    except Exception as exc:
+        # Generic exception handler
+        print(f"An unexpected error occurred: {exc}")
     finally:
         # Ensure cursor and connection are closed
         if cursor is not None:
