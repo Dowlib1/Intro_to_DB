@@ -3,10 +3,9 @@
 """
 Create the alx_book_store database on a MySQL server.
 
-- If the database already exists, the script will not fail.
-- Uses CREATE DATABASE IF NOT EXISTS alx_book_store (no SELECT or SHOW).
+- Uses CREATE DATABASE IF NOT EXISTS alx_book_store.
 - Handles opening and closing the DB connection and cursor.
-- Prints "Database 'alx_book_store' created successfully!" when the CREATE statement runs.
+- Prints "Database 'alx_book_store' created successfully!" after executing the CREATE statement.
 - Prints error messages when failing to connect or on other MySQL errors.
 """
 
@@ -17,8 +16,7 @@ try:
     import mysql.connector
     from mysql.connector import errorcode
 except ModuleNotFoundError:
-    print("Required module 'mysql-connector-python' is not installed. Install with:")
-    print("    pip install mysql-connector-python")
+    print("Required module 'mysql-connector-python' is not installed. Install with: pip install mysql-connector-python")
     sys.exit(1)
 
 
@@ -30,17 +28,11 @@ def main():
     conn = None
     cursor = None
     try:
-        # Establish connection to MySQL server (no database specified)
         conn = mysql.connector.connect(host=host, user=user, password=password)
         cursor = conn.cursor()
-
-        # Create the database if it does not exist.
-        # NOTE: This statement must appear exactly as required by the checks:
         cursor.execute("CREATE DATABASE IF NOT EXISTS alx_book_store")
-        # If the statement executed without raising, report success.
         print("Database 'alx_book_store' created successfully!")
     except mysql.connector.Error as err:
-        # Handle connection and other MySQL errors
         if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
             print("Error: Access denied - check your username or password.")
         elif err.errno == errorcode.ER_BAD_HOST_ERROR:
@@ -48,16 +40,14 @@ def main():
         else:
             print(f"Error connecting to MySQL or creating database: {err}")
     except Exception as exc:
-        # Generic exception handler
         print(f"An unexpected error occurred: {exc}")
     finally:
-        # Ensure cursor and connection are closed
         if cursor is not None:
             try:
                 cursor.close()
             except Exception:
                 pass
-        if conn is not None and conn.is_connected():
+        if conn is not None and getattr(conn, "is_connected", lambda: False)():
             try:
                 conn.close()
             except Exception:
