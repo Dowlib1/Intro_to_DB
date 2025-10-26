@@ -1,32 +1,68 @@
-import mysql.connector
-from mysql.connector import Error
+#!/usr/bin/env python3
+"""
+Simple script to create the alx_book_store database on a MySQL server.
 
-def create_database():
+- If the database already exists, the script will not fail and will inform you.
+- Does NOT use SELECT or SHOW statements.
+- Handles opening and closing the DB connection and cursor.
+- Prints an error message when failing to connect.
+"""
+
+import getpass
+import sys
+
+try:
+    import mysql.connector
+    from mysql.connector import errorcode
+except ModuleNotFoundError:
+    print("Required module 'mysql-connector-python' is not installed. Install with:")
+    print("    pip install mysql-connector-python")
+    sys.exit(1)
+
+
+def main():
+    host = input("Enter MySQL host [localhost]: ").strip() or "localhost"
+    user = input("Enter MySQL user [root]: ").strip() or "root"
+    password = getpass.getpass("Enter MySQL password (leave blank for none): ")
+
+    conn = None
+    cursor = None
     try:
-        # Establish connection to MySQL server
-        connection = mysql.connector.connect(
-            host="localhost",  # Replace with your host
-            user="your_username",  # Replace with your MySQL username
-            password="your_password"  # Replace with your MySQL password
-        )
-        
-        if connection.is_connected():
-            cursor = connection.cursor()
-            # Create database if it doesn't exist
-            cursor.execute("CREATE DATABASE IF NOT EXISTS alx_book_store")
+        # Open connection (no database specified)
+        conn = mysql.connector.connect(host=host, user=user, password=password)
+        cursor = conn.cursor()
+        try:
+            # Try to create the database. Do NOT use SHOW or SELECT.
+            cursor.execute("CREATE DATABASE alx_book_store")
             print("Database 'alx_book_store' created successfully!")
-            
-    except Error as e:
-        print(f"Error connecting to MySQL: {e}")
-        
+        except mysql.connector.Error as err:
+            # If database already exists, MySQL returns ER_DB_CREATE_EXISTS (1007).
+            if err.errno == errorcode.ER_DB_CREATE_EXISTS:
+                print("Database 'alx_book_store' already exists.")
+            else:
+                # Any other error while creating DB
+                print(f"Failed creating database: {err}")
+    except mysql.connector.Error as err:
+        # Handle connection errors
+        if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+            print("Error: Access denied - check your username or password.")
+        elif err.errno == errorcode.ER_BAD_HOST_ERROR:
+            print("Error: Unable to connect to the MySQL host.")
+        else:
+            print(f"Error connecting to MySQL: {err}")
     finally:
-        # Close cursor and connection
-        if 'cursor' in locals():
-            cursor.close()
-        if 'connection' in locals() and connection.is_connected():
-            connection.close()
-            print("MySQL connection closed.")
+        # Ensure cursor and connection are closed
+        if cursor is not None:
+            try:
+                cursor.close()
+            except Exception:
+                pass
+        if conn is not None and conn.is_connected():
+            try:
+                conn.close()
+            except Exception:
+                pass
+
 
 if __name__ == "__main__":
-    create_database()
-#separated
+    main()
